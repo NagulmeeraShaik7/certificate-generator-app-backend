@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import OpenAI from 'openai';
 import { ENVIRONMENT, OPENAI as OPENAI_CONSTANTS, ERROR_MESSAGES, LOG_MESSAGES } from '../infrastructures/constants/constants.mjs';
 
 dotenv.config();
@@ -24,7 +24,7 @@ export class OpenAIService {
       throw new Error(ERROR_MESSAGES.OPENAI_API_KEY_MISSING);
     }
     this.#openai = new OpenAI({
-      apiKey: process.env[ENVIRONMENT.OPENAI_API_KEY],
+      apiKey: process.env[ENVIRONMENT.OPENAI_API_KEY]
     });
   }
 
@@ -48,7 +48,7 @@ export class OpenAIService {
         model: OPENAI_CONSTANTS.MODEL,
         messages: [{ role: OPENAI_CONSTANTS.ROLE.USER, content: prompt }],
         max_tokens: OPENAI_CONSTANTS.PARAMETERS.MAX_TOKENS,
-        temperature: OPENAI_CONSTANTS.PARAMETERS.TEMPERATURE,
+        temperature: OPENAI_CONSTANTS.PARAMETERS.TEMPERATURE
       });
 
       return response.choices[0].message.content.trim();

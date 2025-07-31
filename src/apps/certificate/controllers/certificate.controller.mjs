@@ -1,5 +1,5 @@
-import { CertificateUsecase } from '../usecases/cerificate.usecase.mjs';
 import { ERROR_MESSAGES, HTTP_STATUS } from '../../../infrastructures/constants/constants.mjs';
+import { CertificateUsecase } from '../usecases/cerificate.usecase.mjs';
 
 /**
  * Controller class responsible for handling certificate-related HTTP requests.

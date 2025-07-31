@@ -1,9 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
 import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { CERTIFICATE_REPOSITORY, ERROR_MESSAGES } from '../../../infrastructures/constants/constants.mjs';
 import { OpenAIService } from '../../../services/openai.service.mjs';
 import { CanvasGenerator } from '../../../utils/canvas.generator.mjs';
 import { CertificateModel } from '../models/cerificate.model.mjs';
-import { CERTIFICATE_REPOSITORY, ERROR_MESSAGES } from '../../../infrastructures/constants/constants.mjs';
 
 /**
  * Repository class for handling certificate generation and persistence.
@@ -45,7 +45,7 @@ export class CertificateRepository {
               .replace('{index}', index + 1),
             description: text,
             background,
-            design,
+            design
           });
 
           await certificate.save(); // Save to MongoDB

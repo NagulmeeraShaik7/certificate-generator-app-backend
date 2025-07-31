@@ -1,10 +1,9 @@
-import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
 import certificateRoutes from './apps/certificate/routes/certificate.route.mjs';
-import { ErrorHandler } from './middlewares/error.middleware.mjs';
 import swaggerSpecs from './infrastructures/config/swagger.config.mjs';
 import { 
   SERVER, 
@@ -14,6 +13,7 @@ import {
   ERROR_MESSAGES, 
   SUCCESS_MESSAGES 
 } from './infrastructures/constants/constants.mjs';
+import { ErrorHandler } from './middlewares/error.middleware.mjs';
 
 dotenv.config();
 

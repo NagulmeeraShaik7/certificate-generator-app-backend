@@ -18,7 +18,7 @@ const certificateSchema = new mongoose.Schema({
   [CERTIFICATE_MODEL.FIELDS.TITLE]: { type: String, required: true },
   [CERTIFICATE_MODEL.FIELDS.DESCRIPTION]: { type: String, required: true },
   [CERTIFICATE_MODEL.FIELDS.BACKGROUND]: { type: String, required: true },
-  [CERTIFICATE_MODEL.FIELDS.DESIGN]: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.DESIGN]: { type: String, required: true }
 });
 
 /**

@@ -1,5 +1,5 @@
-import { CertificateRepository } from '../repositories/certificate.repository.mjs';
 import { ERROR_MESSAGES } from '../../../infrastructures/constants/constants.mjs';
+import { CertificateRepository } from '../repositories/certificate.repository.mjs';
 
 /**
  * Usecase class for handling business logic related to certificates.
