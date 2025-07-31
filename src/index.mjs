@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 import certificateRoutes from './apps/certificate/routes/certificate.route.mjs';
 import { ErrorHandler } from './middlewares/error.middleware.mjs';
+import swaggerSpecs from './infrastructures/config/swagger.config.mjs';
 
 dotenv.config();
 
@@ -43,8 +45,29 @@ class Server {
    * @private
    */
   #configureRoutes() {
+    // Root route - redirect to API docs
+    this.#app.get('/', (req, res) => {
+      res.redirect('/api-docs');
+    });
+
+    // Swagger UI route
+    this.#app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'Certificate Generator API Documentation',
+      customfavIcon: '/favicon.ico',
+      swaggerOptions: {
+        persistAuthorization: true,
+        displayRequestDuration: true,
+        filter: true,
+        deepLinking: true
+      }
+    }));
+
+    // API routes
     this.#app.use('/api/certificates', certificateRoutes);
-    this.#app.use(ErrorHandler.handle); // global error handler
+    
+    // Global error handler
+    this.#app.use(ErrorHandler.handle);
   }
 
   /**
