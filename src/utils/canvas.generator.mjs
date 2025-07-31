@@ -1,4 +1,22 @@
+/**
+ * CanvasGenerator class to create various canvas designs
+ * for certificate generation.
+ * @module utils/canvas.generator
+ * @requires OpenAIService
+ * @requires uuid
+ * @requires mongoose
+ * @requires CanvasGenerator
+ * @requires CertificateModel
+ * @description This class provides methods to generate canvas designs
+ * for certificates using predefined templates.
+ */
 export class CanvasGenerator {
+  /**
+   * Creates a canvas design based on the design number.
+   * 
+   * @param {number} designNumber - The design template number (1-5).
+   * @returns {string} The canvas design code as a string.
+   */
   static createCanvasDesign(designNumber) {
     const designs = {
       1: `// Modern Gradient Background

@@ -7,9 +7,18 @@ import { ErrorHandler } from './middlewares/error.middleware.mjs';
 
 dotenv.config();
 
+/**
+ * Server class to initialize and run an Express application
+ * with MongoDB connection and routing configuration.
+ */
 class Server {
+  /** @type {import('express').Express} */
   #app;
+
+  /** @type {string|number} */
   #port;
+
+  /** @type {string|undefined} */
   #mongoUri;
 
   constructor() {
@@ -20,16 +29,30 @@ class Server {
     this.#configureRoutes();
   }
 
+  /**
+   * Configures middleware like CORS and JSON parsing.
+   * @private
+   */
   #configureMiddleware() {
     this.#app.use(cors());
     this.#app.use(express.json());
   }
 
+  /**
+   * Sets up application routes and error handling middleware.
+   * @private
+   */
   #configureRoutes() {
     this.#app.use('/api/certificates', certificateRoutes);
-    this.#app.use(ErrorHandler.handle);
+    this.#app.use(ErrorHandler.handle); // global error handler
   }
 
+  /**
+   * Connects to MongoDB using Mongoose.
+   * Logs error and throws if connection fails.
+   * @private
+   * @returns {Promise<void>}
+   */
   async #connectToMongoDB() {
     try {
       if (!this.#mongoUri) {
@@ -39,21 +62,26 @@ class Server {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
-      console.log('Connected to MongoDB');
+      console.log('✅ Connected to MongoDB');
     } catch (error) {
-      console.error('Failed to connect to MongoDB:', error.message);
+      console.error('❌ Failed to connect to MongoDB:', error.message);
       throw error;
     }
   }
 
-  async start() { 
+  /**
+   * Starts the Express server after connecting to MongoDB.
+   * Logs startup status or exits on error.
+   * @public
+   */
+  async start() {
     try {
       await this.#connectToMongoDB();
       this.#app.listen(this.#port, () => {
-        console.log(`Server running on port ${this.#port}`);
+        console.log(`🚀 Server running on port ${this.#port}`);
       });
     } catch (error) {
-      console.error('Failed to start server:', error.message);
+      console.error('❌ Failed to start server:', error.message);
       process.exit(1);
     }
   }
