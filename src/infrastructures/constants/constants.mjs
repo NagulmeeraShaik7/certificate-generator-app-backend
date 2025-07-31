@@ -67,7 +67,7 @@ export const API_SERVERS = {
     DESCRIPTION: 'Development server'
   },
   PRODUCTION: {
-    URL: 'https://api.certificategenerator.com',
+    URL: 'https://certificate-generator-app-backend.onrender.com',
     DESCRIPTION: 'Production server'
   }
 };
