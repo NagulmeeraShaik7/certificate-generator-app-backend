@@ -1,4 +1,5 @@
 import { CertificateRepository } from '../repositories/certificate.repository.mjs';
+import { ERROR_MESSAGES } from '../../../infrastructures/constants/constants.mjs';
 
 /**
  * Usecase class for handling business logic related to certificates.
@@ -15,7 +16,7 @@ export class CertificateUsecase {
     try {
       return await CertificateRepository.generateCertificateData(categoryName);
     } catch (error) {
-      throw new Error(`Usecase error: ${error.message}`);
+      throw new Error(`${ERROR_MESSAGES.USECASE_ERROR} ${error.message}`);
     }
   }
 }

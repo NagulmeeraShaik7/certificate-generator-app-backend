@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { ENVIRONMENT, OPENAI as OPENAI_CONSTANTS, ERROR_MESSAGES, LOG_MESSAGES } from '../infrastructures/constants/constants.mjs';
 
 dotenv.config();
 
@@ -19,11 +20,11 @@ export class OpenAIService {
    * @throws {Error} If the OpenAI API key is not set in the environment.
    */
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is missing');
+    if (!process.env[ENVIRONMENT.OPENAI_API_KEY]) {
+      throw new Error(ERROR_MESSAGES.OPENAI_API_KEY_MISSING);
     }
     this.#openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env[ENVIRONMENT.OPENAI_API_KEY],
     });
   }
 
@@ -38,23 +39,23 @@ export class OpenAIService {
   async generateCertificateText(categoryName) {
     try {
       if (!categoryName || typeof categoryName !== 'string') {
-        throw new Error('Invalid category name provided');
+        throw new Error(ERROR_MESSAGES.INVALID_CATEGORY_NAME);
       }
 
-      const prompt = `Generate a professional certificate description for "${categoryName}". Keep it concise, formal, and suitable for a certificate. Maximum 50 words.`;
+      const prompt = OPENAI_CONSTANTS.PROMPT_TEMPLATE.replace('{categoryName}', categoryName);
 
       const response = await this.#openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 60,
-        temperature: 0.7,
+        model: OPENAI_CONSTANTS.MODEL,
+        messages: [{ role: OPENAI_CONSTANTS.ROLE.USER, content: prompt }],
+        max_tokens: OPENAI_CONSTANTS.PARAMETERS.MAX_TOKENS,
+        temperature: OPENAI_CONSTANTS.PARAMETERS.TEMPERATURE,
       });
 
       return response.choices[0].message.content.trim();
     } catch (error) {
-      console.error('OpenAI API error:', error.message);
+      console.error(LOG_MESSAGES.OPENAI_API_ERROR, error.message);
       // Fallback response if OpenAI fails
-      return `Certificate of Achievement for ${categoryName}. Awarded for outstanding performance and dedication.`;
+      return OPENAI_CONSTANTS.FALLBACK_TEMPLATE.replace('{categoryName}', categoryName);
     }
   }
 }

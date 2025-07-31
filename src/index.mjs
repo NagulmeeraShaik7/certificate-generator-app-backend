@@ -6,6 +6,14 @@ import swaggerUi from 'swagger-ui-express';
 import certificateRoutes from './apps/certificate/routes/certificate.route.mjs';
 import { ErrorHandler } from './middlewares/error.middleware.mjs';
 import swaggerSpecs from './infrastructures/config/swagger.config.mjs';
+import { 
+  SERVER, 
+  ENVIRONMENT, 
+  MONGODB, 
+  SWAGGER_UI, 
+  ERROR_MESSAGES, 
+  SUCCESS_MESSAGES 
+} from './infrastructures/constants/constants.mjs';
 
 dotenv.config();
 
@@ -25,8 +33,8 @@ class Server {
 
   constructor() {
     this.#app = express();
-    this.#port = process.env.PORT || 3300;
-    this.#mongoUri = process.env.MONGO_URI;
+    this.#port = process.env[ENVIRONMENT.PORT] || SERVER.DEFAULT_PORT;
+    this.#mongoUri = process.env[ENVIRONMENT.MONGO_URI];
     this.#configureMiddleware();
     this.#configureRoutes();
   }
@@ -46,25 +54,20 @@ class Server {
    */
   #configureRoutes() {
     // Root route - redirect to API docs
-    this.#app.get('/', (req, res) => {
-      res.redirect('/api-docs');
+    this.#app.get(SERVER.ROOT_PATH, (req, res) => {
+      res.redirect(SERVER.API_DOCS_PATH);
     });
 
     // Swagger UI route
-    this.#app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
-      customCss: '.swagger-ui .topbar { display: none }',
-      customSiteTitle: 'Certificate Generator API Documentation',
-      customfavIcon: '/favicon.ico',
-      swaggerOptions: {
-        persistAuthorization: true,
-        displayRequestDuration: true,
-        filter: true,
-        deepLinking: true
-      }
+    this.#app.use(SERVER.API_DOCS_PATH, swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+      customCss: SWAGGER_UI.CUSTOM_CSS,
+      customSiteTitle: SWAGGER_UI.SITE_TITLE,
+      customfavIcon: SERVER.FAVICON_PATH,
+      swaggerOptions: SWAGGER_UI.OPTIONS
     }));
 
     // API routes
-    this.#app.use('/api/certificates', certificateRoutes);
+    this.#app.use(SERVER.CERTIFICATES_API_PATH, certificateRoutes);
     
     // Global error handler
     this.#app.use(ErrorHandler.handle);
@@ -79,15 +82,12 @@ class Server {
   async #connectToMongoDB() {
     try {
       if (!this.#mongoUri) {
-        throw new Error('MongoDB URI is missing in environment variables');
+        throw new Error(ERROR_MESSAGES.MONGO_URI_MISSING);
       }
-      await mongoose.connect(this.#mongoUri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-      console.log('✅ Connected to MongoDB');
+      await mongoose.connect(this.#mongoUri, MONGODB.CONNECTION_OPTIONS);
+      console.log(SUCCESS_MESSAGES.MONGO_CONNECTED);
     } catch (error) {
-      console.error('❌ Failed to connect to MongoDB:', error.message);
+      console.error(ERROR_MESSAGES.MONGO_CONNECTION_FAILED + ':', error.message);
       throw error;
     }
   }
@@ -101,10 +101,10 @@ class Server {
     try {
       await this.#connectToMongoDB();
       this.#app.listen(this.#port, () => {
-        console.log(`🚀 Server running on port ${this.#port}`);
+        console.log(`${SUCCESS_MESSAGES.SERVER_RUNNING} ${this.#port}`);
       });
     } catch (error) {
-      console.error('❌ Failed to start server:', error.message);
+      console.error(ERROR_MESSAGES.SERVER_START_FAILED + ':', error.message);
       process.exit(1);
     }
   }

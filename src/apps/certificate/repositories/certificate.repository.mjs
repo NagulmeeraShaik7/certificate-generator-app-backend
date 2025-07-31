@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { OpenAIService } from '../../../services/openai.service.mjs';
 import { CanvasGenerator } from '../../../utils/canvas.generator.mjs';
 import { CertificateModel } from '../models/cerificate.model.mjs';
+import { CERTIFICATE_REPOSITORY, ERROR_MESSAGES } from '../../../infrastructures/constants/constants.mjs';
 
 /**
  * Repository class for handling certificate generation and persistence.
@@ -13,13 +14,7 @@ export class CertificateRepository {
    * @type {string[]}
    * @private
    */
-  static #backgrounds = [
-    'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1557683311-eac922347aa1?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1557683304-673a23048d34?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=600&fit=crop&sat=-100',
-    'https://images.unsplash.com/photo-1557683311-eac922347aa1?w=800&h=600&fit=crop&sat=-100',
-  ];
+  static #backgrounds = CERTIFICATE_REPOSITORY.BACKGROUNDS;
 
   /**
    * Generates a list of certificates using OpenAI to generate descriptions
@@ -32,7 +27,7 @@ export class CertificateRepository {
   static async generateCertificateData(categoryName) {
     try {
       if (!categoryName || typeof categoryName !== 'string') {
-        throw new Error('Invalid category name');
+        throw new Error(ERROR_MESSAGES.INVALID_CATEGORY);
       }
 
       const openAIService = new OpenAIService(); // Instantiate OpenAIService
@@ -45,7 +40,9 @@ export class CertificateRepository {
           const certificate = new CertificateModel({
             id: uuidv4(),
             categoryName,
-            title: `${categoryName} - Design ${index + 1}`,
+            title: CERTIFICATE_REPOSITORY.TITLE_TEMPLATE
+              .replace('{categoryName}', categoryName)
+              .replace('{index}', index + 1),
             description: text,
             background,
             design,
@@ -58,7 +55,7 @@ export class CertificateRepository {
 
       return certificates;
     } catch (error) {
-      throw new Error(`Failed to generate certificate data: ${error.message}`);
+      throw new Error(`${ERROR_MESSAGES.CERTIFICATE_GENERATION_FAILED} ${error.message}`);
     }
   }
 }

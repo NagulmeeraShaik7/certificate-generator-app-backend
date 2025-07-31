@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { CERTIFICATE_MODEL } from '../../../infrastructures/constants/constants.mjs';
 
 /**
  * Mongoose schema for storing certificate details.
@@ -12,12 +13,12 @@ import mongoose from 'mongoose';
  * - `design` (String): JSON or string data representing design configuration.
  */
 const certificateSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  categoryName: { type: String, required: true },
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  background: { type: String, required: true },
-  design: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.ID]: { type: String, required: true, unique: true },
+  [CERTIFICATE_MODEL.FIELDS.CATEGORY_NAME]: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.TITLE]: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.DESCRIPTION]: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.BACKGROUND]: { type: String, required: true },
+  [CERTIFICATE_MODEL.FIELDS.DESIGN]: { type: String, required: true },
 });
 
 /**
@@ -25,4 +26,4 @@ const certificateSchema = new mongoose.Schema({
  * 
  * @type {mongoose.Model}
  */
-export const CertificateModel = mongoose.model('Certificate', certificateSchema);
+export const CertificateModel = mongoose.model(CERTIFICATE_MODEL.COLLECTION_NAME, certificateSchema);

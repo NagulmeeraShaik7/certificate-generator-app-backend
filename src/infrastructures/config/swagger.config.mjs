@@ -1,29 +1,30 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import { API_INFO, API_SERVERS, API_TAGS } from '../constants/constants.mjs';
 
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Certificate Generator API',
-      version: '1.0.0',
-      description: 'API for generating certificates with AI-powered content',
+      title: API_INFO.TITLE,
+      version: API_INFO.VERSION,
+      description: API_INFO.DESCRIPTION,
       contact: {
-        name: 'API Support',
-        email: 'support@certificategenerator.com'
+        name: API_INFO.CONTACT.NAME,
+        email: API_INFO.CONTACT.EMAIL
       },
       license: {
-        name: 'MIT',
-        url: 'https://opensource.org/licenses/MIT'
+        name: API_INFO.LICENSE.NAME,
+        url: API_INFO.LICENSE.URL
       }
     },
     servers: [
       {
-        url: 'http://localhost:3300',
-        description: 'Development server'
+        url: API_SERVERS.DEVELOPMENT.URL,
+        description: API_SERVERS.DEVELOPMENT.DESCRIPTION
       },
       {
-        url: 'https://api.certificategenerator.com',
-        description: 'Production server'
+        url: API_SERVERS.PRODUCTION.URL,
+        description: API_SERVERS.PRODUCTION.DESCRIPTION
       }
     ],
     components: {
@@ -96,8 +97,8 @@ const options = {
     },
     tags: [
       {
-        name: 'Certificates',
-        description: 'Operations related to certificate generation and management'
+        name: API_TAGS.CERTIFICATES.NAME,
+        description: API_TAGS.CERTIFICATES.DESCRIPTION
       }
     ]
   },

@@ -1,4 +1,5 @@
 import { CertificateUsecase } from '../usecases/cerificate.usecase.mjs';
+import { ERROR_MESSAGES, HTTP_STATUS } from '../../../infrastructures/constants/constants.mjs';
 
 /**
  * Controller class responsible for handling certificate-related HTTP requests.
@@ -19,10 +20,10 @@ export class CertificateController {
     try {
       const { categoryName } = req.body;
       if (!categoryName) {
-        throw new Error('Category name is required');
+        throw new Error(ERROR_MESSAGES.CATEGORY_NAME_REQUIRED);
       }
       const certificates = await CertificateUsecase.generateCertificates(categoryName);
-      res.status(200).json(certificates);
+      res.status(HTTP_STATUS.OK).json(certificates);
     } catch (error) {
       next(error);
     }

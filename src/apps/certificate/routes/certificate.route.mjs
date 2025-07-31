@@ -1,6 +1,7 @@
 import express from 'express';
 import { CertificateController } from '../controllers/certificate.controller.mjs';
 import { ErrorHandler } from '../../../middlewares/error.middleware.mjs';
+import { API_TAGS, VALIDATION } from '../../../infrastructures/constants/constants.mjs';
 
 const router = express.Router();
 

@@ -1,3 +1,5 @@
+import { ERROR_MESSAGES, HTTP_STATUS, RESPONSE_KEYS, LOG_MESSAGES } from '../infrastructures/constants/constants.mjs';
+
 /**
  * Centralized error handling middleware for Express applications.
  */
@@ -13,9 +15,9 @@ export class ErrorHandler {
    * @param {import('express').NextFunction} next - The Express next middleware function.
    */
   static handle(error, req, res, next) {
-    console.error('Error:', error.stack);
-    const status = error.status || 500;
-    const message = error.message || 'Internal Server Error';
-    res.status(status).json({ error: message });
+    console.error(LOG_MESSAGES.ERROR, error.stack);
+    const status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    const message = error.message || ERROR_MESSAGES.INTERNAL_SERVER_ERROR;
+    res.status(status).json({ [RESPONSE_KEYS.ERROR]: message });
   }
 }
